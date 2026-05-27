@@ -176,41 +176,45 @@ From tracking daily expenses to setting long-term savings goals, FinTrack Pro co
 
 ## 📁 Project Structure
 
-````
+```
 fintrack-pro/
 │
 ├── client/                          # React + Vite Frontend
 │   ├── public/
-│   └── src/
-│       ├── assets/                  # Images, icons
-│       ├── charts/                  # Recharts wrappers
-│       │   ├── AreaChart.jsx
-│       │   ├── PieChart.jsx
-│       │   └── BarChart.jsx
-│       ├── components/
-│       │   ├── ai/                  # AI insights panel
-│       │   ├── dashboard/           # Stats, recent transactions
-│       │   ├── layout/              # Sidebar, Navbar, AppLayout
-│       │   ├── recurring/           # Recurring transaction UI
-│       │   ├── savings/             # Savings goal cards & forms
-│       │   ├── transactions/        # Table, form, filters
-│       │   └── ui/                  # Button, Card, Modal, Badge...
-│       ├── context/                 # Auth, Theme, Currency context
-│       ├── hooks/                   # Custom React hooks
-│       ├── layouts/                 # Protected route layout
-│       ├── pages/                   # Full pages (Dashboard, Login...)
-│       ├── services/                # Axios API service functions
-│       └── utils/                   # Helpers (CSV, PDF, currency...)
+│   ├── src/
+│   │   ├── assets/
+│   │   ├── charts/
+│   │   ├── components/
+│   │   │   ├── ai/
+│   │   │   ├── dashboard/
+│   │   │   ├── layout/
+│   │   │   ├── recurring/
+│   │   │   ├── savings/
+│   │   │   ├── transactions/
+│   │   │   └── ui/
+│   │   ├── context/
+│   │   ├── hooks/
+│   │   ├── layouts/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   └── utils/
+│   ├── .env
+│   ├── index.html
+│   ├── tailwind.config.js
+│   └── vite.config.js
 │
-└── server/                          # Node + Express Backend
-    ├── config/                      # DB connection, Mailer config
-    ├── controllers/                 # Route handler logic
-    ├── middleware/                  # Auth guard, error handler
-    ├── models/                      # Mongoose schemas
-    ├── routes/                      # Express route definitions
-    └── utils/                       # Token, email templates, scheduler
-````
-
+├── server/                          # Node + Express Backend
+│   ├── config/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── utils/
+│   ├── .env
+│   └── server.js
+│
+└── readme.md
+```
 ---
 
 ## 🚀 Quick Start
