@@ -42,7 +42,7 @@
 
 From tracking daily expenses to setting long-term savings goals, FinTrack Pro combines a **clean modern UI** with **powerful features** like AI-powered expense insights, recurring transaction automation, multi-currency support, and detailed analytics — all secured with JWT authentication.
 
-> 🎯 Built as part of an internship/hackathon assessment to demonstrate full-stack development skills using the MERN stack.
+> 🎯 Built as a self-assessment project to strengthen and demonstrate full-stack development skills using the MERN stack.
 
 ---
 
@@ -176,6 +176,7 @@ From tracking daily expenses to setting long-term savings goals, FinTrack Pro co
 
 ## 📁 Project Structure
 
+````
 fintrack-pro/
 │
 ├── client/                          # React + Vite Frontend
@@ -202,12 +203,13 @@ fintrack-pro/
 │       └── utils/                   # Helpers (CSV, PDF, currency...)
 │
 └── server/                          # Node + Express Backend
-├── config/                      # DB connection, Mailer config
-├── controllers/                 # Route handler logic
-├── middleware/                  # Auth guard, error handler
-├── models/                      # Mongoose schemas
-├── routes/                      # Express route definitions
-└── utils/                       # Token, email templates, scheduler
+    ├── config/                      # DB connection, Mailer config
+    ├── controllers/                 # Route handler logic
+    ├── middleware/                  # Auth guard, error handler
+    ├── models/                      # Mongoose schemas
+    ├── routes/                      # Express route definitions
+    └── utils/                       # Token, email templates, scheduler
+````
 
 ---
 
