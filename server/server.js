@@ -1,8 +1,10 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 import { connectDB } from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
@@ -13,15 +15,13 @@ import aiRoutes from './routes/aiRoutes.js';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 import { startRecurringScheduler } from './utils/recurringScheduler.js';
 
-dotenv.config();
-
 const app = express();
 
 connectDB();
 
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: true,
   credentials: true
 }));
 
