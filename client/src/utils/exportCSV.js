@@ -1,31 +1,46 @@
-export const exportToCSV = (transactions, filename = 'transactions') => {
-  const headers = ['Title', 'Amount', 'Type', 'Category', 'Date', 'Notes']
+export const exportToCSV = (transactions, user, currency = 'USD') => {
+  const now = new Date()
+  const exportDate = now.toLocaleDateString('en-IN', {
+    day: '2-digit', month: 'long', year: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+  })
 
-  const rows = transactions.map(t => [
-    t.title,
-    t.amount,
-    t.type,
-    t.category,
-    `"${new Date(t.date).toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit', 
-      year: 'numeric'
-    })}"`,
-    t.notes || ''
-  ])
+  // Header rows
+  const headerRows = [
+    [`FinTrack Pro - Transaction History Report`],
+    [`Exported On:,${exportDate}`],
+    [`User Name:,${user?.name || 'N/A'}`],
+    [`Email:,${user?.email || 'N/A'}`],
+    [`Currency:,${currency}`],
+    [`Total Records:,${transactions.length}`],
+    [],
+    ['Title', 'Amount', 'Type', 'Category', 'Date']
+  ]
 
-  const csvContent = [
-    headers.join(','),
-    ...rows.map(row => 
-      row.map((cell, index) => 
-        index === 4 ? cell : `"${String(cell).replace(/"/g, '""')}"`
-      ).join(',')
-    )
-  ].join('\n')
+  // Data rows — Notes column removed
+  const dataRows = transactions.map(t => {
+    const d = new Date(t.date)
+    const day = String(d.getDate()).padStart(2, '0')
+    const month = String(d.getMonth() + 1).padStart(2, '0')
+    const year = d.getFullYear()
+    return [
+      `"${t.title || ''}"`,
+      Number(t.amount).toFixed(2),
+      t.type || '',
+      t.category || '',
+      `"${day}-${month}-${year}"`
+    ]
+  })
 
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+  const allRows = [
+    ...headerRows.map(row => row.join(',')),
+    ...dataRows.map(row => row.join(','))
+  ]
+
+  const csvContent = allRows.join('\n')
+  const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' })
   const link = document.createElement('a')
   link.href = URL.createObjectURL(blob)
-  link.download = `${filename}_${new Date().toISOString().split('T')[0]}.csv`
+  link.download = `fintrack_transactions_${now.toISOString().split('T')[0]}.csv`
   link.click()
 }

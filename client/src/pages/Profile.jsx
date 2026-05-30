@@ -1,42 +1,39 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext.jsx'
-import { User, Mail, DollarSign, Bell, Lock, Save } from 'lucide-react'
-import toast from 'react-hot-toast'
+import { useCurrency } from '../context/CurrencyContext.jsx'
+import { User, Mail, DollarSign, Bell, Save } from 'lucide-react'
 
-const CURRENCIES = ['USD', 'EUR', 'GBP', 'INR', 'JPY', 'CAD', 'AUD']
+const CURRENCIES = ['USD', 'EUR', 'INR']
 
 const Profile = () => {
   const { user, updateUser, loading } = useAuth()
+  const { currency, setCurrency } = useCurrency()
+
   const [form, setForm] = useState({
     name: user?.name || '',
-    currency: user?.currency || 'USD',
+    currency: currency || user?.currency || 'USD',
     budgetLimit: user?.budgetLimit || 0,
     emailReminders: user?.emailReminders || false,
-    password: '',
-    confirmPassword: ''
   })
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (form.password && form.password !== form.confirmPassword) {
-      toast.error('Passwords do not match')
-      return
-    }
-    if (form.password && form.password.length < 6) {
-      toast.error('Password must be at least 6 characters')
-      return
-    }
-    const updateData = {
-      name: form.name,
-      currency: form.currency,
-      budgetLimit: Number(form.budgetLimit),
-      emailReminders: form.emailReminders,
-    }
-    if (form.password) updateData.password = form.password
-    await updateUser(updateData)
-    setForm(prev => ({ ...prev, password: '', confirmPassword: '' }))
-  }
+ // Only sync currency from context, don't reset other fields
+useEffect(() => {
+  setForm(prev => ({ ...prev, currency }))
+}, [currency])
 
+const handleSubmit = async (e) => {
+  e.preventDefault()
+  const updateData = {
+    name: form.name,
+    currency: form.currency,
+    budgetLimit: Number(form.budgetLimit),
+    emailReminders: form.emailReminders,
+  }
+  const success = await updateUser(updateData)
+  if (success) {
+    setCurrency(form.currency)
+  }
+}
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
@@ -61,6 +58,7 @@ const Profile = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+
         {/* Personal Info */}
         <div className="card space-y-4">
           <h3 className="font-display font-semibold text-slate-800 dark:text-white flex items-center gap-2">
@@ -92,6 +90,7 @@ const Profile = () => {
               onChange={e => setForm({ ...form, currency: e.target.value })}>
               {CURRENCIES.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
+            <p className="text-xs text-slate-400 mt-1">Save changes to apply currency across the app</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
@@ -102,6 +101,8 @@ const Profile = () => {
               placeholder="0 = no limit" min="0" />
             <p className="text-xs text-slate-400 mt-1">Get warned when expenses approach this limit</p>
           </div>
+
+          {/* Email Reminders Toggle */}
           <div className="flex items-center justify-between py-1">
             <div>
               <p className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
@@ -109,22 +110,17 @@ const Profile = () => {
               </p>
               <p className="text-xs text-slate-400 mt-0.5">Weekly digest of recurring transactions</p>
             </div>
-            <button type="button" onClick={() => setForm({ ...form, emailReminders: !form.emailReminders })}
-              className={`relative w-11 h-6 rounded-full transition-colors ${form.emailReminders ? 'bg-primary-600' : 'bg-slate-200 dark:bg-slate-700'}`}>
-              <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${form.emailReminders ? 'translate-x-5' : 'translate-x-0.5'}`} />
-            </button>
+            <div
+              onClick={() => setForm({ ...form, emailReminders: !form.emailReminders })}
+              className={`relative flex-shrink-0 w-11 h-6 rounded-full cursor-pointer transition-colors duration-200 ${
+                form.emailReminders ? 'bg-primary-600' : 'bg-slate-300 dark:bg-slate-600'
+              }`}
+            >
+              <span className={`absolute top-1 h-4 w-4 bg-white rounded-full shadow transition-transform duration-200 ${
+                form.emailReminders ? 'translate-x-6' : 'translate-x-1'
+              }`} />
+            </div>
           </div>
-        </div>
-
-        {/* Change Password */}
-        <div className="card space-y-4">
-          <h3 className="font-display font-semibold text-slate-800 dark:text-white flex items-center gap-2">
-            <Lock size={16} className="text-primary-600" /> Change Password
-          </h3>
-          <input type="password" placeholder="New password (leave blank to keep current)" className="input"
-            value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} />
-          <input type="password" placeholder="Confirm new password" className="input"
-            value={form.confirmPassword} onChange={e => setForm({ ...form, confirmPassword: e.target.value })} />
         </div>
 
         <button type="submit" disabled={loading}

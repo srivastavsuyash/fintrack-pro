@@ -2,8 +2,11 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, Legend
 } from 'recharts'
+import { useCurrency } from '../context/CurrencyContext.jsx'
 
 const AreaChartComponent = ({ data }) => {
+  const { formatAmount, currency } = useCurrency()
+
   if (!data || data.length === 0) {
     return (
       <div className="flex items-center justify-center h-48">
@@ -11,6 +14,8 @@ const AreaChartComponent = ({ data }) => {
       </div>
     )
   }
+
+  const currencySymbol = { USD: '$', EUR: '€', INR: '₹' }[currency] || '$'
 
   return (
     <ResponsiveContainer width="100%" height={250}>
@@ -36,10 +41,10 @@ const AreaChartComponent = ({ data }) => {
           tick={{ fontSize: 11, fill: '#94a3b8' }}
           axisLine={false}
           tickLine={false}
-          tickFormatter={(v) => `$${v}`}
+          tickFormatter={(v) => `${currencySymbol}${v}`}
         />
         <Tooltip
-          formatter={(value) => [`$${value.toFixed(2)}`]}
+          formatter={(value) => [formatAmount(value)]}
           contentStyle={{
             borderRadius: '12px',
             border: 'none',

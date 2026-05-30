@@ -32,7 +32,7 @@ const register = async (data) => {
 
     const res = await registerUser(data);
 
-    console.log("REGISTER RESPONSE:", res);
+    // console.log("REGISTER RESPONSE:", res);
 
     if (!res || !res.token) {
       throw new Error("Invalid server response");
@@ -47,7 +47,7 @@ const register = async (data) => {
 
   } catch (error) {
 
-    console.log("FULL ERROR:", error?.response?.data || error.message);
+    // console.log("FULL ERROR:", error?.response?.data || error.message);
 
     toast.error(
       error?.response?.data?.message ||

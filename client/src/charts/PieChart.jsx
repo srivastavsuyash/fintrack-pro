@@ -2,6 +2,7 @@ import {
   PieChart as RechartsPie, Pie, Cell,
   Tooltip, ResponsiveContainer, Legend
 } from 'recharts'
+import { useCurrency } from '../context/CurrencyContext.jsx'
 
 const COLORS = [
   '#6366f1', '#22c55e', '#f59e0b', '#ef4444',
@@ -10,6 +11,8 @@ const COLORS = [
 ]
 
 const PieChartComponent = ({ data }) => {
+  const { formatAmount } = useCurrency()
+
   if (!data || data.length === 0) {
     return (
       <div className="flex items-center justify-center h-48">
@@ -42,7 +45,7 @@ const PieChartComponent = ({ data }) => {
           ))}
         </Pie>
         <Tooltip
-          formatter={(value) => [`$${value}`, 'Amount']}
+          formatter={(value) => [formatAmount(value), 'Amount']}
           contentStyle={{
             borderRadius: '12px',
             border: 'none',

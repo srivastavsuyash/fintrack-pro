@@ -1,52 +1,47 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { useAuth } from './AuthContext.jsx';
+import { createContext, useContext, useState, useEffect } from 'react'
+import { useAuth } from './AuthContext.jsx'
 
-const CurrencyContext = createContext();
-
-const CURRENCY_CONFIG = {
+const CURRENCIES = {
   USD: { symbol: '$', locale: 'en-US' },
   EUR: { symbol: '€', locale: 'de-DE' },
-  GBP: { symbol: '£', locale: 'en-GB' },
   INR: { symbol: '₹', locale: 'en-IN' },
-  JPY: { symbol: '¥', locale: 'ja-JP' },
-  CAD: { symbol: 'C$', locale: 'en-CA' },
-  AUD: { symbol: 'A$', locale: 'en-AU' },
-};
+}
+
+const CurrencyContext = createContext()
 
 export const CurrencyProvider = ({ children }) => {
-  const { user } = useAuth();
-  const [currency, setCurrency] = useState('USD');
+  const { user } = useAuth()
+  const [currency, setCurrency] = useState('USD')
 
-  // Sirf ek baar user change hone pe update karo
+  // Load currency from user profile on login/refresh
   useEffect(() => {
-    if (user?.currency && user.currency !== currency) {
-      setCurrency(user.currency);
+    if (user?.currency && CURRENCIES[user.currency]) {
+      setCurrency(user.currency)
     }
-  }, [user?.currency]); // ← sirf user.currency watch karo
+  }, [user])
+
+  // Only update local state — no backend call here
+  const changeCurrency = (newCurrency) => {
+    if (!CURRENCIES[newCurrency]) return
+    setCurrency(newCurrency)
+  }
 
   const formatAmount = (amount) => {
-    const config = CURRENCY_CONFIG[currency];
-    return new Intl.NumberFormat(config.locale, {
+    const { locale } = CURRENCIES[currency]
+    const num = Number(amount) || 0
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
-      currency: currency,
-    }).format(amount || 0);
-  };
-
-  const getCurrencySymbol = () => {
-    return CURRENCY_CONFIG[currency]?.symbol || '$';
-  };
+      currency,
+      minimumFractionDigits: 2,
+    }).format(num)
+  }
 
   return (
-    <CurrencyContext.Provider value={{
-      currency,
-      setCurrency,
-      formatAmount,
-      getCurrencySymbol,
-      CURRENCY_CONFIG
-    }}>
+    <CurrencyContext.Provider value={{ currency, setCurrency: changeCurrency, formatAmount, CURRENCIES }}>
       {children}
     </CurrencyContext.Provider>
-  );
-};
+  )
+}
 
-export const useCurrency = () => useContext(CurrencyContext);
+export const useCurrency = () => useContext(CurrencyContext)
+export default CurrencyContext

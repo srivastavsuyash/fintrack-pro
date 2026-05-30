@@ -3,7 +3,7 @@ import { useAuth } from '../../context/AuthContext.jsx'
 import {
   LayoutDashboard, ArrowLeftRight, BarChart3,
   Target, RefreshCcw, Sparkles, User,
-  LogOut, X, Wallet
+  LogOut, X, Wallet, Info, Mail
 } from 'lucide-react'
 
 const navItems = [
@@ -14,6 +14,8 @@ const navItems = [
   { path: '/recurring', icon: RefreshCcw, label: 'Recurring' },
   { path: '/ai-insights', icon: Sparkles, label: 'AI Insights' },
   { path: '/profile', icon: User, label: 'Profile' },
+  { path: '/about', icon: Info, label: 'About Us' },
+  { path: '/contact', icon: Mail, label: 'Contact Us' },
 ]
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -32,6 +34,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       border-r border-slate-100 dark:border-slate-800
       transform transition-transform duration-300 ease-in-out
       lg:relative lg:translate-x-0
+      flex flex-col
       ${isOpen ? 'translate-x-0' : '-translate-x-full'}
     `}>
       {/* Logo */}
@@ -72,7 +75,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-3 space-y-1">
+      <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
         {navItems.map(({ path, icon: Icon, label }) => (
           <NavLink
             key={path}
@@ -93,7 +96,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         ))}
       </nav>
 
-      {/* Logout */}
+      {/* Logout — always at bottom */}
       <div className="p-3 border-t border-slate-100 dark:border-slate-800">
         <button
           onClick={handleLogout}

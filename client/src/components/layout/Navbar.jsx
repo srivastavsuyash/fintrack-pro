@@ -3,10 +3,16 @@ import { useTheme } from '../../context/ThemeContext.jsx'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { useCurrency } from '../../context/CurrencyContext.jsx'
 
+const CURRENCY_OPTIONS = [
+  { code: 'USD', symbol: '$' },
+  { code: 'EUR', symbol: '€' },
+  { code: 'INR', symbol: '₹' },
+]
+
 const Navbar = ({ onMenuClick }) => {
   const { isDark, toggleTheme } = useTheme()
   const { user } = useAuth()
-  const { currency, setCurrency, CURRENCY_CONFIG } = useCurrency()
+  const { currency, setCurrency } = useCurrency()
 
   return (
     <header className="h-16 bg-white dark:bg-surface-900 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between px-4 md:px-6">
@@ -42,14 +48,14 @@ const Navbar = ({ onMenuClick }) => {
             rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2
             focus:ring-primary-500 cursor-pointer"
         >
-          {Object.keys(CURRENCY_CONFIG).map(c => (
-            <option key={c} value={c}>
-              {CURRENCY_CONFIG[c].symbol} {c}
+          {CURRENCY_OPTIONS.map(c => (
+            <option key={c.code} value={c.code}>
+              {c.symbol} {c.code}
             </option>
           ))}
         </select>
 
-        {/* Theme Toggle — Sun/Moon button */}
+        {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
           title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}

@@ -12,6 +12,7 @@ import transactionRoutes from './routes/transactionRoutes.js';
 import savingsRoutes from './routes/savingsRoutes.js';
 import recurringRoutes from './routes/recurringRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
+import contactRoutes from './routes/contactRoutes.js'
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 import { startRecurringScheduler } from './utils/recurringScheduler.js';
 
@@ -48,6 +49,7 @@ app.use('/api/transactions', transactionRoutes);
 app.use('/api/savings', savingsRoutes);
 app.use('/api/recurring', recurringRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/contact', contactRoutes)
 
 app.use(notFound);
 app.use(errorHandler);

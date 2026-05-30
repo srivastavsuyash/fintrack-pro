@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Plus, Search, Filter, Download } from 'lucide-react'
-import { getTransactions, createTransaction, updateTransaction, deleteTransaction } from '../services/transactionService.js'
-import { getSummary } from '../services/transactionService.js'
+import { Plus, Search, Download } from 'lucide-react'
+import { getTransactions, createTransaction, updateTransaction, deleteTransaction, getSummary } from '../services/transactionService.js'
 import { useCurrency } from '../context/CurrencyContext.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
 import { exportToCSV } from '../utils/exportCSV.js'
 import { exportToPDF } from '../utils/exportPDF.js'
 import { formatDate } from '../utils/dateHelpers.js'
@@ -27,7 +27,15 @@ const Transactions = () => {
   const [form, setForm] = useState(emptyForm)
   const [filters, setFilters] = useState({ search: '', type: '', category: '', page: 1 })
   const [totalPages, setTotalPages] = useState(1)
-  const { formatAmount } = useCurrency()
+  const [showExportModal, setShowExportModal] = useState(false)
+  const [exportType, setExportType] = useState('pdf')
+  const [dateRange, setDateRange] = useState('last30')
+  const [customFrom, setCustomFrom] = useState('')
+  const [customTo, setCustomTo] = useState('')
+  const [exportLoading, setExportLoading] = useState(false)
+
+  const { formatAmount, currency } = useCurrency()
+  const { user } = useAuth()
 
   const fetchData = async () => {
     try {
@@ -86,6 +94,56 @@ const Transactions = () => {
     }
   }
 
+  const getFilteredByRange = (txns) => {
+    const now = new Date()
+    let from = null
+    if (dateRange === 'last7') from = new Date(now - 7 * 86400000)
+    else if (dateRange === 'last30') from = new Date(now - 30 * 86400000)
+    else if (dateRange === 'last3m') from = new Date(now - 90 * 86400000)
+    else if (dateRange === 'last6m') from = new Date(now - 180 * 86400000)
+    else if (dateRange === 'last12m') from = new Date(now - 365 * 86400000)
+    else if (dateRange === 'thisMonth') from = new Date(now.getFullYear(), now.getMonth(), 1)
+    else if (dateRange === 'thisYear') from = new Date(now.getFullYear(), 0, 1)
+    else if (dateRange === 'custom') {
+      const fromD = customFrom ? new Date(customFrom) : null
+      const toD = customTo ? new Date(customTo) : null
+      return txns.filter(t => {
+        const d = new Date(t.date)
+        return (!fromD || d >= fromD) && (!toD || d <= toD)
+      })
+    }
+    return from ? txns.filter(t => new Date(t.date) >= from) : txns
+  }
+
+  const handleExport = async () => {
+    setExportLoading(true)
+    try {
+      const allData = await getTransactions({ limit: 10000 })
+      const allTxns = allData.transactions || []
+      const filtered = getFilteredByRange(allTxns)
+      if (filtered.length === 0) {
+        toast.error('No transactions found for selected range')
+        setExportLoading(false)
+        return
+      }
+      const sumData = {
+        totalIncome: filtered.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0),
+        totalExpense: filtered.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0),
+      }
+      if (exportType === 'pdf') {
+        exportToPDF(filtered, sumData, user, currency)
+      } else {
+        exportToCSV(filtered, user, currency)
+      }
+      setShowExportModal(false)
+      toast.success(`${exportType.toUpperCase()} exported successfully!`)
+    } catch {
+      toast.error('Export failed. Please try again.')
+    } finally {
+      setExportLoading(false)
+    }
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -118,10 +176,14 @@ const Transactions = () => {
           <option value="">All Categories</option>
           {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
-        <button onClick={() => exportToCSV(transactions)} className="btn-ghost flex items-center gap-2 text-sm border border-slate-200 dark:border-slate-700">
+        <button
+          onClick={() => { setExportType('csv'); setShowExportModal(true) }}
+          className="btn-ghost flex items-center gap-2 text-sm border border-slate-200 dark:border-slate-700">
           <Download size={15} /> CSV
         </button>
-        <button onClick={() => exportToPDF(transactions, summary)} className="btn-ghost flex items-center gap-2 text-sm border border-slate-200 dark:border-slate-700">
+        <button
+          onClick={() => { setExportType('pdf'); setShowExportModal(true) }}
+          className="btn-ghost flex items-center gap-2 text-sm border border-slate-200 dark:border-slate-700">
           <Download size={15} /> PDF
         </button>
       </div>
@@ -190,7 +252,69 @@ const Transactions = () => {
         </div>
       )}
 
-      {/* Modal */}
+      {/* Export Modal */}
+      {showExportModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white dark:bg-surface-900 rounded-2xl p-6 w-full max-w-sm shadow-xl">
+            <h2 className="font-display font-bold text-lg text-slate-800 dark:text-white mb-1">
+              Export {exportType.toUpperCase()}
+            </h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">Select date range for export</p>
+
+            <div className="space-y-1 mb-4">
+              {[
+                { val: 'last7', label: 'Last 7 Days' },
+                { val: 'last30', label: 'Last 30 Days' },
+                { val: 'last3m', label: 'Last 3 Months' },
+                { val: 'last6m', label: 'Last 6 Months' },
+                { val: 'last12m', label: 'Last 12 Months' },
+                { val: 'thisMonth', label: 'Current Month' },
+                { val: 'thisYear', label: 'Current Year' },
+                { val: 'custom', label: 'Custom Range' },
+              ].map(opt => (
+                <label key={opt.val} className="flex items-center gap-3 cursor-pointer py-1.5 px-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+                  <input type="radio" name="dateRange" value={opt.val}
+                    checked={dateRange === opt.val}
+                    onChange={e => setDateRange(e.target.value)}
+                    className="text-primary-600 accent-primary-600" />
+                  <span className="text-sm text-slate-700 dark:text-slate-300">{opt.label}</span>
+                </label>
+              ))}
+            </div>
+
+            {dateRange === 'custom' && (
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <div>
+                  <label className="text-xs text-slate-500 dark:text-slate-400 mb-1 block">From</label>
+                  <input type="date" className="input text-sm"
+                    value={customFrom} onChange={e => setCustomFrom(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-500 dark:text-slate-400 mb-1 block">To</label>
+                  <input type="date" className="input text-sm"
+                    value={customTo} onChange={e => setCustomTo(e.target.value)} />
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-3 mt-2">
+              <button onClick={() => setShowExportModal(false)}
+                className="btn-ghost flex-1 border border-slate-200 dark:border-slate-700">
+                Cancel
+              </button>
+              <button onClick={handleExport} disabled={exportLoading}
+                className="btn-primary flex-1 flex items-center justify-center gap-2 disabled:opacity-60">
+                {exportLoading
+                  ? <><span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" /> Exporting...</>
+                  : <><Download size={14} /> Export</>
+                }
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add/Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="bg-white dark:bg-surface-900 rounded-2xl p-6 w-full max-w-md shadow-xl">
@@ -216,7 +340,8 @@ const Transactions = () => {
               <textarea placeholder="Notes (optional)" className="input resize-none" rows={2}
                 value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} />
               <div className="flex gap-3 pt-1">
-                <button type="button" onClick={() => setShowModal(false)} className="btn-ghost flex-1 border border-slate-200 dark:border-slate-700">Cancel</button>
+                <button type="button" onClick={() => setShowModal(false)}
+                  className="btn-ghost flex-1 border border-slate-200 dark:border-slate-700">Cancel</button>
                 <button type="submit" className="btn-primary flex-1">{editItem ? 'Update' : 'Add'}</button>
               </div>
             </form>
