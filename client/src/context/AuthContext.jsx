@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
       toast.success(`Welcome back, ${res.name}! 👋`);
       return true;
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Login failed');
+      // toast.error(error.response?.data?.message || 'Login failed');
       return false;
     } finally {
       setLoading(false);

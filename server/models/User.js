@@ -37,7 +37,13 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: ''
-  }
+  },
+  phone: {
+  type: String,
+  default: ''
+},
+resetPasswordToken: String,
+resetPasswordExpire: Date,
 }, { timestamps: true });
 
 // Hash password before saving

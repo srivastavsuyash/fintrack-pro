@@ -3,6 +3,7 @@ import { useAuth } from './context/AuthContext.jsx'
 import ProtectedLayout from './layouts/ProtectedLayout.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
+import ResetPassword from './pages/ResetPassword.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Transactions from './pages/Transactions.jsx'
 import Analytics from './pages/Analytics.jsx'
@@ -18,6 +19,7 @@ const App = () => {
       <Routes>
         <Route path="/login" element={!user ? <Login /> : <Navigate to="/dashboard" />} />
         <Route path="/register" element={!user ? <Register /> : <Navigate to="/dashboard" />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route element={<ProtectedLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/transactions" element={<Transactions />} />
