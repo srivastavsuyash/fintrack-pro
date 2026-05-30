@@ -43,6 +43,7 @@ if (process.env.NODE_ENV === 'development') {
 app.get('/', (req, res) => {
   res.json({ message: '✅ FinTrack Pro API is running!' });
 });
+app.get('/health', (req, res) => res.send('OK'));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
