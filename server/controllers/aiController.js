@@ -1,10 +1,14 @@
 import 'dotenv/config';
 import Transaction from '../models/Transaction.js';
+import User from '../models/User.js';
 
 export const getAIInsights = async (req, res) => {
   try {
     const apiKey = process.env.GROQ_API_KEY;
     console.log('Using GROQ Key:', apiKey ? apiKey.substring(0, 10) + '...' : 'NOT FOUND');
+
+    const user = await User.findById(req.user._id);
+    const currency = user?.currency || 'USD';
 
     const transactions = await Transaction.find({
       userId: req.user._id
@@ -17,10 +21,10 @@ export const getAIInsights = async (req, res) => {
     }
 
     const summary = transactions.map(t =>
-      `${t.type === 'expense' ? 'Spent' : 'Earned'} $${t.amount} on ${t.category} (${t.title}) on ${new Date(t.date).toLocaleDateString()}`
+      `${t.type === 'expense' ? 'Spent' : 'Earned'} ${currency} ${t.amount} on ${t.category} (${t.title}) on ${new Date(t.date).toLocaleDateString()}`
     ).join('\n');
 
-    const prompt = `You are a personal finance advisor. Analyze these transactions and give 3-5 specific, actionable insights to help save money and improve financial health. Be concise and friendly.\n\nTransactions:\n${summary}`;
+    const prompt = `You are a personal finance advisor. The user's currency is ${currency}. Analyze these transactions and give 3-5 specific, actionable insights to help save money and improve financial health. Always show amounts in ${currency} only — never use $ or USD symbol if currency is different. Be concise and friendly.\n\nTransactions:\n${summary}`;
 
     const response = await fetch(
       'https://api.groq.com/openai/v1/chat/completions',
