@@ -157,8 +157,8 @@ From tracking daily expenses to setting long-term savings goals, FinTrack Pro co
 
 ## 📸 Screenshots
 
-![Login](./screenshots/Login.png)
-![Dashboard](./screenshots/Dashboard.png)
+![Login](./screenshots/login.png)
+![Dashboard](./screenshots/dashboard.png)
 ![Transactions](./screenshots/transactions.png)
 ![Analytics](./screenshots/analytics.png)
 ![Savings Goals](./screenshots/savings.png)
