@@ -2,6 +2,16 @@ import 'dotenv/config';
 import Transaction from '../models/Transaction.js';
 import User from '../models/User.js';
 
+const currencySymbols = {
+  USD: '$',
+  EUR: '€',
+  INR: '₹',
+  GBP: '£',
+  JPY: '¥',
+  CAD: 'CA$',
+  AUD: 'A$'
+};
+
 export const getAIInsights = async (req, res) => {
   try {
     const apiKey = process.env.GROQ_API_KEY;
@@ -9,6 +19,7 @@ export const getAIInsights = async (req, res) => {
 
     const user = await User.findById(req.user._id);
     const currency = user?.currency || 'USD';
+    const symbol = currencySymbols[currency] || currency;
 
     const transactions = await Transaction.find({
       userId: req.user._id
@@ -21,10 +32,10 @@ export const getAIInsights = async (req, res) => {
     }
 
     const summary = transactions.map(t =>
-      `${t.type === 'expense' ? 'Spent' : 'Earned'} ${currency} ${t.amount} on ${t.category} (${t.title}) on ${new Date(t.date).toLocaleDateString()}`
+      `${t.type === 'expense' ? 'Spent' : 'Earned'} ${symbol}${t.amount} on ${t.category} (${t.title}) on ${new Date(t.date).toLocaleDateString()}`
     ).join('\n');
 
-    const prompt = `You are a personal finance advisor. The user's currency is ${currency}. Analyze these transactions and give 3-5 specific, actionable insights to help save money and improve financial health. Always show amounts in ${currency} only — never use $ or USD symbol if currency is different. Be concise and friendly.\n\nTransactions:\n${summary}`;
+    const prompt = `You are a personal finance advisor. The user's currency is ${currency} (symbol: ${symbol}). Analyze these transactions and give 3-5 specific, actionable insights to help save money and improve financial health. Always use ${symbol} symbol for amounts — never use any other currency symbol. Be concise and friendly.\n\nTransactions:\n${summary}`;
 
     const response = await fetch(
       'https://api.groq.com/openai/v1/chat/completions',
