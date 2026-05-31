@@ -13,7 +13,7 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=flat-square)](CONTRIBUTING.md)
 
-**[🌐 Live Demo](https://fintrack-pro-ecru.vercel.app)** • **[📸 Screenshots](#-screenshots)** • **[🚀 Quick Start](#-quick-start)**
+**[🌐 Live Demo](https://fintrack-pro-ecru.vercel.app)** • **[📸 Screenshots](#-screenshots)** • **[🚀 Quick Start](#-quick-start)** • **[📡 API Docs](#-api-documentation)**
 
 </div>
 
