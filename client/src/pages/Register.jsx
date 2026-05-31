@@ -217,7 +217,7 @@ const Register = () => {
           </p>
         </div>
 
-        <p className="text-center text-xs text-slate-400 mt-6">Secured with JWT Authentication 🔒</p>
+        <p className="text-center text-xs text-slate-400 mt-1">Made with ❤️ by Suyash Srivastava</p>
       </div>
     </div>
   )

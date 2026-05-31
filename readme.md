@@ -13,14 +13,13 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=flat-square)](CONTRIBUTING.md)
 
-**[🌐 Live Demo](#)** • **[📸 Screenshots](#-screenshots)** • **[🚀 Quick Start](#-quick-start)** • **[📡 API Docs](#-api-documentation)**
+**[🌐 Live Demo](https://fintrack-pro-ecru.vercel.app)** • **[📸 Screenshots](#-screenshots)** • **[🚀 Quick Start](#-quick-start)** • **[📡 API Docs](#-api-documentation)**
 
 </div>
 
 ---
 
 ## 📌 Table of Contents
-
 - [Overview](#-overview)
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
@@ -81,7 +80,7 @@ From tracking daily expenses to setting long-term savings goals, FinTrack Pro co
 - 9 goal categories (Vacation, House, Car, etc.)
 
 ### 🤖 AI Expense Insights
-- Powered by Claude AI (Anthropic)
+- Powered by Groq API
 - Analyzes last 50 transactions
 - Provides 3–5 personalized financial tips
 - Actionable and friendly advice
@@ -89,7 +88,6 @@ From tracking daily expenses to setting long-term savings goals, FinTrack Pro co
 ### 📄 Reports & Export
 - Export transactions to **CSV**
 - Download **PDF reports** with jsPDF
-- Monthly summary table
 
 ### 📧 Email Reminders
 - Weekly email digest of upcoming recurring transactions
@@ -97,7 +95,7 @@ From tracking daily expenses to setting long-term savings goals, FinTrack Pro co
 - Toggle on/off from profile settings
 
 ### 🌍 Multi-Currency Support
-- 7 currencies: USD, EUR, GBP, INR, JPY, CAD, AUD
+- 3 currencies: USD, EUR, INR
 - Auto-formatting based on user preference
 - Stored per user account
 
@@ -145,7 +143,7 @@ From tracking daily expenses to setting long-term savings goals, FinTrack Pro co
 ### AI & External Services
 | Service | Purpose |
 |---|---|
-| Anthropic Claude API | AI expense insights |
+| Groq API | AI expense insights |
 | MongoDB Atlas | Cloud-hosted database |
 | Gmail SMTP | Email reminders |
 
@@ -172,49 +170,6 @@ From tracking daily expenses to setting long-term savings goals, FinTrack Pro co
 | 🤖 AI Insights | *Coming soon* |
 | 👤 Profile | *Coming soon* |
 
----
-
-## 📁 Project Structure
-
-```
-fintrack-pro/
-│
-├── client/                          # React + Vite Frontend
-│   ├── public/
-│   ├── src/
-│   │   ├── assets/
-│   │   ├── charts/
-│   │   ├── components/
-│   │   │   ├── ai/
-│   │   │   ├── dashboard/
-│   │   │   ├── layout/
-│   │   │   ├── recurring/
-│   │   │   ├── savings/
-│   │   │   ├── transactions/
-│   │   │   └── ui/
-│   │   ├── context/
-│   │   ├── hooks/
-│   │   ├── layouts/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   └── utils/
-│   ├── .env
-│   ├── index.html
-│   ├── tailwind.config.js
-│   └── vite.config.js
-│
-├── server/                          # Node + Express Backend
-│   ├── config/
-│   ├── controllers/
-│   ├── middleware/
-│   ├── models/
-│   ├── routes/
-│   ├── utils/
-│   ├── .env
-│   └── server.js
-│
-└── readme.md
-```
 ---
 
 ## 🚀 Quick Start
@@ -377,16 +332,11 @@ http://localhost:5000/api
 
 ## 🔮 Future Improvements
 
-- [ ] Google OAuth login
-- [ ] Bank account sync via Plaid API
-- [ ] Mobile app with React Native
-- [ ] Shared expenses / split bills
-- [ ] Investment portfolio tracker
-- [ ] SMS bill payment reminders
-- [ ] Multi-language support
-- [ ] PWA / Offline mode
-- [ ] Advanced AI budgeting
-- [ ] Tax report generation
+- [ ] Google OAuth & Social Login for faster onboarding
+- [ ] WhatsApp & SMS notifications for budget alerts
+- [ ] Bank Account Sync to auto-import transactions
+- [ ] Mobile App support via React Native
+- [ ] Advanced AI-powered monthly budget suggestions
 
 ---
 
