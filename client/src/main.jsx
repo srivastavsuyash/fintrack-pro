@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Toaster } from 'react-hot-toast'
@@ -13,6 +14,7 @@ createRoot(document.getElementById('root')).render(
       <AuthProvider>
         <CurrencyProvider>
           <App />
+          <Analytics />
           <Toaster
             position="top-right"
             toastOptions={{
