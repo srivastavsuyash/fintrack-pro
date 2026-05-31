@@ -13,7 +13,7 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=flat-square)](CONTRIBUTING.md)
 
-**[🌐 Live Demo](https://fintrack-pro-ecru.vercel.app)** • **[📸 Screenshots](#-screenshots)** • **[🚀 Quick Start](#-quick-start)** • **[📡 API Docs](#-api-documentation)**
+**[🌐 Live Demo](https://fintrack-pro-ecru.vercel.app)** • **[📸 Screenshots](#-screenshots)** • **[🚀 Quick Start](#-quick-start)**
 
 </div>
 
@@ -24,7 +24,6 @@
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
 - [Screenshots](#-screenshots)
-- [Project Structure](#-project-structure)
 - [Quick Start](#-quick-start)
 - [Environment Variables](#-environment-variables)
 - [API Documentation](#-api-documentation)
@@ -158,17 +157,12 @@ From tracking daily expenses to setting long-term savings goals, FinTrack Pro co
 
 ## 📸 Screenshots
 
-> 📷 Screenshots will be added after deployment.
-
-| Page | Preview |
-|---|---|
-| 🔐 Login | *Coming soon* |
-| 📊 Dashboard | *Coming soon* |
-| 💳 Transactions | *Coming soon* |
-| 📈 Analytics | *Coming soon* |
-| 🎯 Savings Goals | *Coming soon* |
-| 🤖 AI Insights | *Coming soon* |
-| 👤 Profile | *Coming soon* |
+![Login](./screenshots/Login.png)
+![Dashboard](./screenshots/Dashboard.png)
+![Transactions](./screenshots/transactions.png)
+![Analytics](./screenshots/analytics.png)
+![Savings Goals](./screenshots/savings.png)
+![AI Insights](./screenshots/ai-insights.png)
 
 ---
 
@@ -238,7 +232,7 @@ EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_USER=your_gmail@gmail.com
 EMAIL_PASS=your_16_char_app_password
-ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxxxxx
+GROQ_API_KEY=gsk_xxxxxxxxxxxxxxxx
 CLIENT_URL=http://localhost:5173
 ```
 
