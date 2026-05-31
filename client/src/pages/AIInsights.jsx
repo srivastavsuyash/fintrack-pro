@@ -75,7 +75,7 @@ const AIInsights = () => {
         <div className="card text-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4" />
           <p className="text-slate-600 dark:text-slate-400 font-medium">Analyzing your transactions...</p>
-          <p className="text-slate-400 text-sm mt-1">Claude AI is reviewing your spending patterns</p>
+          <p className="text-slate-400 text-sm mt-1">AI is reviewing your spending patterns</p>
         </div>
       )}
 
