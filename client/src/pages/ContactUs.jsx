@@ -88,7 +88,7 @@ const ContactUs = () => {
           </div>
           <div>
             <p className="font-semibold text-slate-800 dark:text-white text-sm">Support Email</p>
-            <p className="text-primary-600 dark:text-primary-400 text-sm mt-0.5">support@fintrackpro.com</p>
+            <p className="text-primary-600 dark:text-primary-400 text-sm mt-0.5">fintrackproapplication@gmail.com</p>
             <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">
               Or use the form below — we respond within 24–48 hours.
             </p>
